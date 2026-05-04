@@ -112,7 +112,7 @@ pub fn get_quote(quote_size: &u8, is_equal: bool) {
             println!("{}", tmp[random::random(tmp.len())]);
         }
         _ => {
-            println!("{}", quotes[random::random(quotes.len() - 1)]);
+            println!("{}", quotes[random::random(quotes.len())]);
         }
     }
 }
