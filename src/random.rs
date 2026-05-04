@@ -41,6 +41,11 @@ pub fn get_random_file_weighted(path: PathBuf) -> std::io::Result<String> {
     let mut rng = thread_rng();
     match get_file_sizes(&path) {
         Ok(mut files) => {
+            if files.is_empty() {
+                eprintln!("No fortune files found in {path:?}");
+                std::process::exit(1);
+            }
+
             files.sort_unstable_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
             let mut contents = String::new();
             std::fs::File::open(&files.choose_weighted(&mut rng, |item| item.0).unwrap().1)?
@@ -65,6 +70,11 @@ pub fn get_random_file_unweighted(path: PathBuf) -> std::io::Result<String> {
     match get_file_sizes(&path) {
         Ok(files) => {
             let mut contents = String::new();
+            if files.is_empty() {
+                eprintln!("No fortune files found in {path:?}");
+                std::process::exit(1);
+            }
+
             std::fs::File::open(&files.choose(&mut rng).unwrap().1)?
                 .read_to_string(&mut contents)?;
             Ok(contents)
