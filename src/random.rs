@@ -58,6 +58,28 @@ pub fn get_random_file_weighted(path: PathBuf) -> std::io::Result<String> {
     }
 }
 
+pub fn get_random_file_unweighted(path: PathBuf) -> std::io::Result<String> {
+    use std::io::ErrorKind;
+
+    let mut rng = thread_rng();
+    match get_file_sizes(&path) {
+        Ok(files) => {
+            let mut contents = String::new();
+            std::fs::File::open(&files.choose(&mut rng).unwrap().1)?
+                .read_to_string(&mut contents)?;
+            Ok(contents)
+        }
+        Err(e) => match e.kind() {
+            ErrorKind::NotFound => {
+                eprintln!("{e}");
+                println!("Couldn't find \"{path:?}\", make sure you set FORTUNE_DIR correctly, or verify that you're in a directory with a folder named \"{path:?}\".",);
+                std::process::exit(1);
+            }
+            _ => panic!("Error: {}", e),
+        },
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

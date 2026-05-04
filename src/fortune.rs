@@ -62,6 +62,7 @@ pub fn search_fortunes(pattern: &str) {
 ///   - `2-254`: Reduces the target length by half for each increment.
 ///   - `255`: Prints a humorous message and exits.
 ///   - `0` or any other value: Retrieves a completely random quote.
+/// * `equal` - Uses `get_random_file_unweighted` to fetch a qoute, pretending all files are the same size
 ///
 /// # Panics
 ///
@@ -75,9 +76,14 @@ pub fn search_fortunes(pattern: &str) {
 /// get_quote(&1); // Retrieves a quote of default size.
 /// get_quote(&255); // Prints a humorous message and exits.
 /// ```
-pub fn get_quote(quote_size: &u8) {
-    //let file = handle_file_errors(fortune_dir, &file::pick_file);
-    let file = &random::get_random_file_weighted(PathBuf::from(get_fortune_dir())).unwrap();
+pub fn get_quote(quote_size: &u8, is_equal: bool) {
+    // let file = handle_file_errors(fortune_dir, &file::pick_file);
+    let file = if is_equal {
+        random::get_random_file_unweighted(PathBuf::from(get_fortune_dir()))
+    } else {
+        random::get_random_file_weighted(PathBuf::from(get_fortune_dir()))
+    }
+    .unwrap();
 
     let quotes: Vec<&str> = file.split("\n%\n").collect();
 

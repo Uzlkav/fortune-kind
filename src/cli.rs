@@ -3,7 +3,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-only
 
-use clap::{arg, command, crate_authors, Arg, Command};
+use clap::{arg, command, crate_authors, Arg, ArgAction, Command};
 
 pub fn build_cli() -> Command {
     command!()
@@ -34,5 +34,18 @@ pub fn build_cli() -> Command {
                 .long("length")
                 .help("Finds a fortune that is shorter than provided number."),
         )
+        // .arg(
+        //     Arg::new("short")
+        //         .short('s')
+        //         .long("short")
+        //         .help("Shows a short aporism."),
+        // )
         .arg(arg!(-s --short ... "Shows a short aporism."))
+        .arg(
+            Arg::new("equal")
+                .short('e')
+                .long("equal")
+                .action(ArgAction::SetTrue)
+                .help("Consider all fortune files to be of equal size."),
+        )
 }
