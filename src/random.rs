@@ -45,13 +45,14 @@ pub fn get_random_file_weighted(path: PathBuf) -> std::io::Result<String> {
                 eprintln!("No fortune files found in {path:?}");
                 std::process::exit(1);
             }
-
             files.sort_unstable_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
-            let mut contents = String::new();
+            let mut contents: Vec<u8> = Vec::new();
+
             std::fs::File::open(&files.choose_weighted(&mut rng, |item| item.0).unwrap().1)?
-                .read_to_string(&mut contents)?;
-            Ok(contents)
+                .read_to_end(&mut contents)?;
+            Ok(String::from_utf8_lossy(&contents).into_owned())
         }
+
         Err(e) => match e.kind() {
             ErrorKind::NotFound => {
                 eprintln!("{e}");
@@ -69,16 +70,17 @@ pub fn get_random_file_unweighted(path: PathBuf) -> std::io::Result<String> {
     let mut rng = thread_rng();
     match get_file_sizes(&path) {
         Ok(files) => {
-            let mut contents = String::new();
             if files.is_empty() {
                 eprintln!("No fortune files found in {path:?}");
                 std::process::exit(1);
             }
+            let mut contents: Vec<u8> = Vec::new();
 
             std::fs::File::open(&files.choose(&mut rng).unwrap().1)?
-                .read_to_string(&mut contents)?;
-            Ok(contents)
+                .read_to_end(&mut contents)?;
+            Ok(String::from_utf8_lossy(&contents).into_owned())
         }
+
         Err(e) => match e.kind() {
             ErrorKind::NotFound => {
                 eprintln!("{e}");

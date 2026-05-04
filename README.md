@@ -104,3 +104,6 @@ topic of discussion, the final say rests with cafkafk's judgment.
 
 For more info about contributing and the acceptance policy, please see
 [EDITORIAL.md](https://github.com/cafkafk/fortune-kind/blob/main/EDITORIAL.md)
+
+### Miscellany
+If you're seeing � symbols in your fortunes, try replacing indent characters with four spaces, and substituting any special characters for utf8 encodable versions. This shouldn't happen with the default fortunes included in this repo.
